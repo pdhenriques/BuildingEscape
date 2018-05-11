@@ -23,6 +23,24 @@ void UGrabber::BeginPlay()
 	// ...
 	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty"));
 	
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle)
+	{
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Object %s is missing a PhysicsHandle Component"), *GetOwner()->GetName());
+	}
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent)
+	{
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Object %s is missing a Input Component"), *GetOwner()->GetName());
+	}
 }
 
 
@@ -76,7 +94,7 @@ void UGrabber::GetUsableInView()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Looking at: nothing recognizable"));
+		//UE_LOG(LogTemp, Warning, TEXT("Looking at: nothing recognizable"));
 	}
 
 
