@@ -30,7 +30,6 @@ public:
 
 
 private:
-	AActor * Owner;
 
 	UPROPERTY(EditAnywhere)
 	float OpenAngle = 90.0f;

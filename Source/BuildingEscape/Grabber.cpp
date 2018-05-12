@@ -47,7 +47,13 @@ void UGrabber::SetupInputComponent()
 
 void UGrabber::Grab()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Grab pressed!"), *GetOwner()->GetName());
+	if (PhysicsHandle == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle is null!"));
+		return;
+	}
+
+	//UE_LOG(LogTemp, Warning, TEXT("Grab pressed!"), *GetOwner()->GetName());
 	auto HitResult = GetUsableInView();
 	auto ComponentToGrab = HitResult.GetComponent();
 	auto ActorHit = HitResult.GetActor();
@@ -61,12 +67,30 @@ void UGrabber::Grab()
 
 void UGrabber::Release()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Grab released!"), *GetOwner()->GetName());
+	if (PhysicsHandle == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle is null!"));
+		return;
+	}
+
+	//UE_LOG(LogTemp, Warning, TEXT("Grab released!"), *GetOwner()->GetName());
 	PhysicsHandle->ReleaseComponent();
 }
 
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	if (Controller == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Controller is null!"));
+		return;
+	}
+	if (PhysicsHandle == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle is null!"));
+		return;
+	}
+
+
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (PhysicsHandle->GrabbedComponent)
 	{
@@ -79,8 +103,12 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 const FHitResult UGrabber::GetUsableInView()
 {
-	if (Controller == NULL)
+	if (Controller == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Controller is null!"));
 		return FHitResult();
+	}
+
 
 	FHitResult HitResult;
 
