@@ -16,6 +16,11 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+	if (PressurePlate == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s PressurePlate is null!"), *GetOwner()->GetName());
+		return;
+	}
 }
 
 void UOpenDoor::OpenDoor()
@@ -52,7 +57,7 @@ float UOpenDoor::GetTotalMassOfActorsOnPlate()
 
 	if (PressurePlate == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PressurePlate is null!"));
+		//UE_LOG(LogTemp, Error, TEXT("%s PressurePlate is null!"), *GetOwner()->GetName());
 		return TotalMass;
 	}
 
