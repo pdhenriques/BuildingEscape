@@ -18,7 +18,6 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	Controller = GetWorld()->GetFirstPlayerController();
-	//UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty"));
 	FindPhysicsHandleComponent();
 	SetupInputComponent();
 }
@@ -26,11 +25,7 @@ void UGrabber::BeginPlay()
 void UGrabber::FindPhysicsHandleComponent()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle)
-	{
-
-	}
-	else
+	if (PhysicsHandle == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Object %s is missing a PhysicsHandle Component"), *GetOwner()->GetName());
 	}
@@ -41,7 +36,6 @@ void UGrabber::SetupInputComponent()
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Input component found!"));
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
@@ -71,8 +65,6 @@ void UGrabber::Release()
 	PhysicsHandle->ReleaseComponent();
 }
 
-
-// Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -87,15 +79,14 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 const FHitResult UGrabber::GetUsableInView()
 {
-	FHitResult Hit;
-	FVector CamLoc;
-	FRotator CamRot;
-
 	if (Controller == NULL)
 		return FHitResult();
 
+	FHitResult HitResult;
+
+	FVector CamLoc;
+	FRotator CamRot;
 	Controller->GetPlayerViewPoint(CamLoc, CamRot);
-	//UE_LOG(LogTemp, Warning, TEXT("CamLoc: %s :: CamRot: %s"), *CamLoc.ToString(), *CamRot.ToString());
 	const FVector TraceStart = CamLoc;
 	const FVector Direction = CamRot.Vector();
 	const FVector TraceEnd = TraceStart + (Direction * MaxUseDistance);
@@ -106,21 +97,12 @@ const FHitResult UGrabber::GetUsableInView()
 	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
 
 	GetWorld()->LineTraceSingleByObjectType(
-		Hit,
+		HitResult,
 		CamLoc,
 		TraceEnd,
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		TraceParams
 	);
 
-	if (Hit.Actor != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Looking at: %s :: Distance: %f"), *Hit.Actor->GetName(), Hit.Distance);
-	}
-	else
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Looking at: nothing recognizable"));
-	}
-
-	return Hit;
+	return HitResult;
 }
