@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Engine/TriggerVolume.h"
+#include "Components/PrimitiveComponent.h"
 #include "OpenDoor.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent);
